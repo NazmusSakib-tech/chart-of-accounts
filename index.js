@@ -17,13 +17,25 @@ app.get('/', (req, res) => {
     res.send('test chart of Accounts ');
 });
 
-// insert chart 
+// insert single chart 
 try {
     app.post('/chart', async (req, res) => {
         const chart = new chartOfAccount(req.body);
         console.log(req.body);
         const createChart = await chart.save();
         res.status(201).send(createChart);
+    })
+} catch (err) {
+    res.status(400).send(err);
+}
+// insert Multiple chart 
+try {
+    app.post('/chartMultiple', async (req, res) => {
+        // const chart = new chartOfAccount(req.body);
+        console.log(req.body);
+        const createChartMultiple = await chartOfAccount.insertMany(req.body);
+        console.log(createChartMultiple);
+        res.status(201).send(createChartMultiple);
     })
 } catch (err) {
     res.status(400).send(err);
@@ -46,7 +58,7 @@ try {
     app.get('/chart/:id', async (req, res) => {
         const _id = req.params.id;
         console.log(_id);
-        const singleChartData = await chartOfAccount.findOne({ _id: _id });
+        const singleChartData = await chartOfAccount.findOne({ _id: _id }, { active_status: 1 });
         res.send(singleChartData);
     })
 } catch (err) {
