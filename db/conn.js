@@ -1,6 +1,6 @@
 const monsoose = require("mongoose");
 
-monsoose.connect("mongodb://localhost:27017/chartOfAccounts").then(() => {
+monsoose.connect("mongodb://localhost:27017/Accounts").then(() => {
     console.log("connection is successfull");
 }).catch((e) => {
     console.log("No connect")

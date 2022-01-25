@@ -1,5 +1,6 @@
 const express = require('express');
 const chartOfAccount = require('./models/chartOfAccount');
+const Group = require('./models/group');
 // const Course = require('./models/courses');
 require('./db/conn');
 
@@ -24,6 +25,17 @@ try {
         console.log(req.body);
         const createChart = await chart.save();
         res.status(201).send(createChart);
+    })
+} catch (err) {
+    res.status(400).send(err);
+}
+// insert single group 
+try {
+    app.post('/groups', async (req, res) => {
+        const group = new Group(req.body);
+        console.log(req.body);
+        const createGroup = await group.save();
+        res.status(201).send(createGroup);
     })
 } catch (err) {
     res.status(400).send(err);
@@ -58,7 +70,7 @@ try {
     app.get('/chart/:id', async (req, res) => {
         const _id = req.params.id;
         console.log(_id);
-        const singleChartData = await chartOfAccount.findOne({ _id: _id }, { active_status: 1 });
+        const singleChartData = await chartOfAccount.findOne({ _id: _id }).populate('groups');
         res.send(singleChartData);
     })
 } catch (err) {
@@ -79,6 +91,6 @@ try {
 
 
 
-app.listen(port, '192.168.68.129', () => {
+app.listen(port, () => {
     console.log('listen port on 8000')
 })

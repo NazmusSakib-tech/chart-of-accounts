@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 
 const chartOfAccountSchema = new mongoose.Schema({
@@ -16,24 +17,18 @@ const chartOfAccountSchema = new mongoose.Schema({
     },
     class_type: {
         type: String,
-        unique: true
+
     },
     active_status: {
         type: Boolean
     },
-    group: [
+    groups: [
         {
-            group_code:
-            {
-                type: Number
-            },
-            group_name:
-            {
-                type: String
-            },
-
+            type: Schema.Types.ObjectId,
+            ref: 'Group'
         }
     ],
+
     createdAt: {
         type: Date,
         default: Date.now
@@ -50,3 +45,6 @@ const chartOfAccountSchema = new mongoose.Schema({
 const chartOfAccount = new mongoose.model('chartOfAccount', chartOfAccountSchema);
 
 module.exports = chartOfAccount;
+
+
+// Data Grip for backup of mongodb 
