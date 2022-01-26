@@ -1,7 +1,8 @@
 const express = require('express');
 const chartOfAccount = require('./models/chartOfAccount');
 const Group = require('./models/group');
-// const Course = require('./models/courses');
+const Account = require('./models/account');
+
 require('./db/conn');
 
 
@@ -13,12 +14,13 @@ app.use(express.json());
 app.use((err, req, res, next) => {
     console.log(err.message);
 })
+
 // create a new COA 
 app.get('/', (req, res) => {
     res.send('test chart of Accounts ');
 });
 
-// insert single chart 
+// insert single Class 
 try {
     app.post('/chart', async (req, res) => {
         const chart = new chartOfAccount(req.body);
@@ -40,7 +42,21 @@ try {
 } catch (err) {
     res.status(400).send(err);
 }
-// insert Multiple chart 
+// insert single Account 
+try {
+    app.post('/accounts', async (req, res) => {
+        const account = new Account(req.body);
+        console.log(req.body);
+        const createAccount = await account.save();
+        res.status(201).send(createAccount);
+    })
+} catch (err) {
+    res.status(400).send(err);
+}
+
+
+
+// insert Multiple class 
 try {
     app.post('/chartMultiple', async (req, res) => {
         // const chart = new chartOfAccount(req.body);
@@ -64,7 +80,7 @@ try {
     res.send(err);
 }
 
-// single Chart find
+// single Class find
 
 try {
     app.get('/chart/:id', async (req, res) => {
@@ -77,13 +93,50 @@ try {
     res.send(err);
 }
 
-// single Chart Update
+
+// single Group find
+
+try {
+    app.get('/groups/:id', async (req, res) => {
+        const _id = req.params.id;
+        console.log(_id);
+        const singleGroupData = await Group.findOne({ _id: _id }).populate('accounts');
+        res.send(singleGroupData);
+    })
+} catch (err) {
+    res.send(err);
+}
+// single Account find
+
+try {
+    app.get('/accounts/:id', async (req, res) => {
+        const _id = req.params.id;
+        console.log(_id);
+        const singleAccountData = await Account.findOne({ _id: _id }).populate('group');
+        res.send(singleAccountData);
+    })
+} catch (err) {
+    res.send(err);
+}
+
+// single Class Update
 try {
     app.patch('/chart/:id', async (req, res) => {
         const _id = req.params.id;
         console.log(_id);
         const singleChartDataUpdate = await chartOfAccount.findByIdAndUpdate(_id, req.body);
         res.send(singleChartDataUpdate);
+    })
+} catch (err) {
+    res.status(400).send(err);
+}
+// single Group Update
+try {
+    app.patch('/groups/:id', async (req, res) => {
+        const _id = req.params.id;
+        console.log(_id);
+        const singleGroupDataUpdate = await Group.findByIdAndUpdate(_id, req.body);
+        res.send(singleGroupDataUpdate);
     })
 } catch (err) {
     res.status(400).send(err);

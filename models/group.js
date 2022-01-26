@@ -8,6 +8,12 @@ const groupSchema = new mongoose.Schema({
     group_name: {
         type: String,
     },
+    accounts: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Account'
+        }
+    ]
     // class_id: {
     //     type: Schema.Types.ObjectId,
     //     ref: 'ChartOfAccount'
