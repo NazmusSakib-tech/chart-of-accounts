@@ -31,6 +31,8 @@ try {
 } catch (err) {
     res.status(400).send(err);
 }
+
+
 // insert single group 
 try {
     app.post('/groups', async (req, res) => {
@@ -112,7 +114,7 @@ try {
     app.get('/accounts/:id', async (req, res) => {
         const _id = req.params.id;
         console.log(_id);
-        const singleAccountData = await Account.findOne({ _id: _id }).populate('group');
+        const singleAccountData = await Account.findOne({ _id: _id }).populate({ path: 'group', });
         res.send(singleAccountData);
     })
 } catch (err) {
@@ -130,6 +132,22 @@ try {
 } catch (err) {
     res.status(400).send(err);
 }
+
+// single Class Update for group property 
+try {
+    app.put('/chart/:id', async (req, res) => {
+        const _id = req.params.id;
+
+        console.log(_id);
+        // const singleChartDataUpdate = await chartOfAccount.findByIdAndUpdate(_id, { $push: { groups: req.body.groups._id } });
+        // res.send(singleChartDataUpdate);
+        res.send("Hello");
+    })
+} catch (err) {
+    res.status(400).send(err);
+}
+
+
 // single Group Update
 try {
     app.patch('/groups/:id', async (req, res) => {
@@ -141,6 +159,26 @@ try {
 } catch (err) {
     res.status(400).send(err);
 }
+
+// // Count Class 
+// chartOfAccount
+//     .countDocuments()
+//     .then(docCount => {
+//         console.log(docCount)
+//         //and do one super neat trick
+//     })
+//     .catch(err => {
+//         //handle possible errors
+//     })
+
+// Count Group
+
+// Group.countDocuments({ group_code: "1102" }, function (err, docCount,) {
+//     if (err) { return handleError(err) } //handle possible errors
+//     console.log(docCount)
+
+//     //and do some other fancy stuff
+// })
 
 
 
