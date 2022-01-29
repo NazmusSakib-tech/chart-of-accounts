@@ -2,7 +2,11 @@ const express = require('express');
 const chartOfAccount = require('./models/chartOfAccount');
 const Group = require('./models/group');
 const Account = require('./models/account');
-
+const User = require('./models/user');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config();
+const checkLogin = require('./middlewares/checkLogin')
 require('./db/conn');
 
 
@@ -74,7 +78,7 @@ try {
 // Find all chart 
 
 try {
-    app.get('/chart', async (req, res) => {
+    app.get('/chart', checkLogin, async (req, res) => {
         const chartData = await chartOfAccount.find();
         res.send(chartData);
     })
@@ -160,25 +164,64 @@ try {
     res.status(400).send(err);
 }
 
-// // Count Class 
-// chartOfAccount
-//     .countDocuments()
-//     .then(docCount => {
-//         console.log(docCount)
-//         //and do one super neat trick
-//     })
-//     .catch(err => {
-//         //handle possible errors
-//     })
+//user signUp
 
-// Count Group
+try {
+    app.post('/signup', async (req, res) => {
+        const hashedPassword = await bcrypt.hash(req.body.password, 10)
+        const newUser = new User({
+            name: req.body.name,
+            username: req.body.username,
+            password: hashedPassword
+        });
+        console.log(req.body);
+        const createNewUser = await newUser.save();
+        res.status(201).send(createNewUser);
+    })
+} catch (err) {
+    res.status(400).send(err);
+}
 
-// Group.countDocuments({ group_code: "1102" }, function (err, docCount,) {
-//     if (err) { return handleError(err) } //handle possible errors
-//     console.log(docCount)
 
-//     //and do some other fancy stuff
-// })
+//user Login
+
+app.post("/login", async (req, res) => {
+    try {
+        const user = await User.find({ username: req.body.username });
+        if (user && user.length > 0) {
+            const isValidPassword = await bcrypt.compare(req.body.password, user[0].password);
+
+            if (isValidPassword) {
+                // generate token
+                const token = jwt.sign({
+                    username: user[0].username,
+                    userId: user[0]._id,
+                }, "process.env.JWT_SECRET", {
+                    expiresIn: '10h'
+                });
+
+                res.status(200).json({
+                    "access_token": token,
+                    "message": "Login successful!"
+                });
+            } else {
+                res.status(401).json({
+                    "error": "wrong pass. Authetication failed!"
+                });
+            }
+        } else {
+            res.status(401).json({
+                "error": "User Not found! Authetication failed!"
+            });
+        }
+    } catch {
+        res.status(401).json({
+            "error": "Authetication failed!"
+        });
+    }
+});
+
+//end login
 
 
 
