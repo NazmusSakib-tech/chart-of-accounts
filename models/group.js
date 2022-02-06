@@ -7,7 +7,7 @@ const groupSchema = new mongoose.Schema({
     },
     group_name: {
         type: String,
-    },
+    }
     // class_id: {
     //     type: Schema.Types.ObjectId,
     //     ref: 'ChartOfAccount'
