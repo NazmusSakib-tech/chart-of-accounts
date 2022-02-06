@@ -137,6 +137,42 @@ try {
     res.status(400).send(err);
 }
 
+
+
+
+// single Class team Find
+try {
+    app.get('/team/', async (req, res) => {
+        // const _id = req.params.id;
+
+        const singleChartDataUpdate = await chartOfAccount.findOne({ class_code: "fsfs" });
+        res.send(singleChartDataUpdate);
+    })
+} catch (err) {
+    res.status(400).send(err);
+}
+
+
+try {
+    app.patch('/team', async (req, res) => {
+        const _id = req.params.id;
+        const class_code = req.body.class_code
+        console.log(class_code, req.body.mobile);
+        const singleChartDataUpdate = await chartOfAccount.updateOne({ class_code: class_code }, { $push: { teamMembers: { mobile: req.body.mobile } } });
+        res.send(singleChartDataUpdate);
+    })
+} catch (err) {
+    res.status(400).send(err);
+}
+
+
+
+
+
+
+
+
+
 // single Class Update for group property 
 try {
     app.put('/chart/:id', async (req, res) => {
@@ -161,7 +197,7 @@ try {
         res.send(singleGroupDataUpdate);
     })
 } catch (err) {
-    res.status(400).send(err);
+    res.status(400).send(err); { $push: { scores: 89 } }
 }
 
 //user signUp

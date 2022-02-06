@@ -28,6 +28,12 @@ const chartOfAccountSchema = new mongoose.Schema({
             ref: 'Group'
         }
     ],
+    teamMembers: [
+        {
+            mobile: String,
+            designation: String
+        }
+    ],
 
     createdAt: {
         type: Date,
